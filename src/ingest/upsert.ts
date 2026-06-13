@@ -1,6 +1,6 @@
 import { clips, db, monsters, punishGuides } from "../db/index.js";
-import type { ClipEntry } from "./parse.js";
-import type { MonsterRecord, Weapon } from "./types.js";
+import { clipUrl } from "../media/url.js";
+import type { MonsterRecord } from "./types.js";
 
 export interface UpsertCounts {
   guides: number;
@@ -38,9 +38,8 @@ export async function upsertMonster(rec: MonsterRecord): Promise<UpsertCounts> {
       .returning({ id: monsters.id });
     const monsterId = monster!.id;
 
-    const guideIdByWeapon = new Map<Weapon, number>();
     for (const w of rec.weapons) {
-      const [guide] = await tx
+      await tx
         .insert(punishGuides)
         .values({
           monsterId,
@@ -55,39 +54,27 @@ export async function upsertMonster(rec: MonsterRecord): Promise<UpsertCounts> {
             publishedAt: w.frontmatter.published_at ?? null,
             updatedAt: now,
           },
-        })
-        .returning({ id: punishGuides.id });
-      guideIdByWeapon.set(w.weapon, guide!.id);
+        });
     }
 
-    let clipCount = 0;
-    const upsertClip = async (clip: ClipEntry, punishGuideId: number | null): Promise<void> => {
+    // Clips are monster-level assets; URL derived by convention, punish_guide_id NULL.
+    for (const clip of rec.clips) {
+      const url = clipUrl(rec.game, rec.monsterSlug, clip.slug);
       await tx
         .insert(clips)
         .values({
           monsterId,
-          punishGuideId,
+          punishGuideId: null,
           slug: clip.slug,
-          url: clip.url,
-          caption: clip.caption ?? null,
+          url,
+          caption: clip.caption,
         })
         .onConflictDoUpdate({
           target: [clips.monsterId, clips.slug],
-          set: { url: clip.url, caption: clip.caption ?? null, punishGuideId },
+          set: { url, caption: clip.caption, punishGuideId: null },
         });
-      clipCount += 1;
-    };
-
-    for (const clip of general.frontmatter.clips) {
-      await upsertClip(clip, null);
-    }
-    for (const w of rec.weapons) {
-      const guideId = guideIdByWeapon.get(w.weapon)!;
-      for (const clip of w.frontmatter.clips) {
-        await upsertClip(clip, guideId);
-      }
     }
 
-    return { guides: rec.weapons.length, clips: clipCount };
+    return { guides: rec.weapons.length, clips: rec.clips.length };
   });
 }

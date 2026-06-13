@@ -7,42 +7,58 @@ import type {
 } from "mdast-util-mdx-jsx";
 import { visit } from "unist-util-visit";
 
+/** A `<Clip>` reference harvested from an MDX body. */
+export interface HarvestedClip {
+  slug: string;
+  caption?: string;
+}
+
 export interface CompileResult {
   /** Function-body string to store in the DB. */
   code: string;
-  /** Deduped literal `slug`s referenced by `<Clip>` in the body. */
-  referencedSlugs: string[];
+  /** `<Clip>` references harvested from the body (may repeat a slug). */
+  clips: HarvestedClip[];
 }
 
-const SLUGS_KEY = "clipSlugs";
+const CLIPS_KEY = "harvestedClips";
 const ISSUES_KEY = "clipIssues";
 
+function literalAttr(
+  node: MdxJsxFlowElement | MdxJsxTextElement,
+  name: string,
+): string | undefined {
+  const attr = node.attributes.find(
+    (a): a is MdxJsxAttribute => a.type === "mdxJsxAttribute" && a.name === name,
+  );
+  return attr && typeof attr.value === "string" ? attr.value : undefined;
+}
+
 /**
- * remark plugin: collect `<Clip slug="...">` references during the compile pass.
- * Only literal slugs can be validated against frontmatter, so a missing or
- * expression-valued slug is recorded as an issue (the caller fails fast).
+ * remark plugin: harvest each `<Clip slug="..." caption="...">` during the
+ * compile pass. `slug` must be a literal (so its URL/key can be derived); a
+ * missing or expression-valued slug is recorded as an issue and the caller
+ * fails fast. `caption` is optional; a non-literal caption is ignored.
  */
-function collectClipSlugs() {
+function collectClips() {
   return (tree: Root, file: { data: Record<string, unknown> }): void => {
-    const slugs: string[] = [];
+    const clips: HarvestedClip[] = [];
     const issues: string[] = [];
 
     const handle = (node: MdxJsxFlowElement | MdxJsxTextElement): void => {
       if (node.name !== "Clip") return;
-      const slugAttr = node.attributes.find(
-        (a): a is MdxJsxAttribute => a.type === "mdxJsxAttribute" && a.name === "slug",
-      );
-      if (!slugAttr || typeof slugAttr.value !== "string") {
+      const slug = literalAttr(node, "slug");
+      if (slug === undefined) {
         issues.push('a <Clip> is missing a literal "slug" attribute');
         return;
       }
-      slugs.push(slugAttr.value);
+      const caption = literalAttr(node, "caption");
+      clips.push(caption === undefined ? { slug } : { slug, caption });
     };
 
     visit(tree, "mdxJsxFlowElement", handle);
     visit(tree, "mdxJsxTextElement", handle);
 
-    file.data[SLUGS_KEY] = [...new Set(slugs)];
+    file.data[CLIPS_KEY] = clips;
     file.data[ISSUES_KEY] = issues;
   };
 }
@@ -56,7 +72,7 @@ export async function compileBody(
     outputFormat: "function-body",
     development: false,
     baseUrl: opts.baseUrl,
-    remarkPlugins: [collectClipSlugs],
+    remarkPlugins: [collectClips],
   });
 
   const data = vfile.data as Record<string, unknown>;
@@ -67,6 +83,6 @@ export async function compileBody(
 
   return {
     code: String(vfile),
-    referencedSlugs: (data[SLUGS_KEY] as string[] | undefined) ?? [],
+    clips: (data[CLIPS_KEY] as HarvestedClip[] | undefined) ?? [],
   };
 }

@@ -1,37 +1,39 @@
-import type { CompiledFile } from "./types.js";
-
-/** Every `<Clip slug>` referenced in the body must be declared in that file's frontmatter clips. */
-export function validateClipReferences(file: CompiledFile): void {
-  const declared = new Set(file.frontmatter.clips.map((c) => c.slug));
-  for (const slug of file.referencedSlugs) {
-    if (!declared.has(slug)) {
-      throw new Error(
-        `${file.absPath}: <Clip slug="${slug}"/> has no matching entry in frontmatter clips`,
-      );
-    }
-  }
-}
+import type { CompiledFile, ResolvedClip } from "./types.js";
 
 /**
- * Clip slugs are unique per monster (`clips(monster_id, slug)`), so a slug
- * declared in two files under the same monster would silently clobber one row.
- * Reject it instead.
+ * Merge all `<Clip>` references across a monster's files into one row per slug.
+ * Clips are monster-level assets (reused freely across the general and weapon
+ * pages), so a repeated slug collapses to a single row. A slug declared with
+ * two **different** non-empty captions is ambiguous → abort; a captioned and an
+ * uncaptioned reference are not a conflict (the caption wins).
  */
-export function validateNoDuplicateClipSlugs(
+export function mergeMonsterClips(
   game: string,
   monsterSlug: string,
   files: CompiledFile[],
-): void {
-  const seen = new Map<string, string>(); // slug → declaring file
+): ResolvedClip[] {
+  const captionBySlug = new Map<string, string | null>();
+
   for (const file of files) {
-    for (const clip of file.frontmatter.clips) {
-      const prev = seen.get(clip.slug);
-      if (prev) {
+    for (const clip of file.clips) {
+      const existing = captionBySlug.get(clip.slug);
+      const incoming = clip.caption ?? null;
+
+      if (existing === undefined) {
+        captionBySlug.set(clip.slug, incoming);
+        continue;
+      }
+      if (existing !== null && incoming !== null && existing !== incoming) {
         throw new Error(
-          `${game}/${monsterSlug}: clip slug "${clip.slug}" declared in both ${prev} and ${file.absPath}`,
+          `${game}/${monsterSlug}: clip "${clip.slug}" has conflicting captions ("${existing}" vs "${incoming}")`,
         );
       }
-      seen.set(clip.slug, file.absPath);
+      // Prefer a present caption over null.
+      if (existing === null && incoming !== null) {
+        captionBySlug.set(clip.slug, incoming);
+      }
     }
   }
+
+  return [...captionBySlug].map(([slug, caption]) => ({ slug, caption }));
 }

@@ -4,9 +4,9 @@ import { fixture } from "./fixtures.js";
 
 // Each case aborts in phase 1 (before any DB write), so no truncation is needed.
 describe("ingest — fail-fast validation", () => {
-  it("rejects a <Clip> with no matching frontmatter entry", async () => {
-    await expect(ingest({ contentRoot: fixture("bad/missing-clip") })).rejects.toThrow(
-      /no matching entry/,
+  it("rejects the same clip slug declared with conflicting captions", async () => {
+    await expect(ingest({ contentRoot: fixture("bad/conflicting-caption") })).rejects.toThrow(
+      /conflicting captions/,
     );
   });
 
@@ -31,12 +31,6 @@ describe("ingest — fail-fast validation", () => {
   it("rejects uncompilable MDX", async () => {
     await expect(ingest({ contentRoot: fixture("bad/bad-mdx") })).rejects.toThrow(
       /failed to compile MDX/,
-    );
-  });
-
-  it("rejects a clip slug declared in two files under one monster", async () => {
-    await expect(ingest({ contentRoot: fixture("bad/dup-clip-slug") })).rejects.toThrow(
-      /declared in both/,
     );
   });
 });
