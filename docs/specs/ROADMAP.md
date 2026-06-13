@@ -1,0 +1,36 @@
+# Roadmap
+
+<!-- status: draft | approved -->
+| Field | Value |
+|---|---|
+| status | approved |
+| created | 2026-06-13 |
+
+## Features
+
+v1 milestone: **Chatacabra (Wilds)** shipped end-to-end — general + Longsword + Greatsword pages
+through the real content pipeline. Proves the full vertical slice before scaling content.
+
+| ID | Feature | Status | Spec |
+|---|---|---|---|
+| 001 | Database schema + migrations (monsters, punish_guides, clips with slugs) | planned | — |
+| 002 | MDX ingest pipeline (compile MDX, `<Clip>` component, idempotent upsert) | planned | — |
+| 003 | Media hosting (R2/S3 + CDN) + clip upload/reference flow | planned | — |
+| 004 | Routing + guide rendering (`/guias/:game/:monster[/:weapon]`, SSR) | planned | — |
+| 005 | Chatacabra general page content (estados, baiting, patrones) | planned | — |
+| 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | planned | — |
+| 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | planned | — |
+| 008 | SEO + i18n polish + Playwright E2E on core routes | planned | — |
+
+## Status Values
+
+- `planned` — not yet started
+- `in-progress` — spec written, implementation underway
+- `implemented` — decision record complete
+- `deprecated` — removed from product
+
+## Revision History
+
+| Date | Change |
+|---|---|
+| 2026-06-13 | Initial roadmap created |
