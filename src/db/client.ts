@@ -1,0 +1,16 @@
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./schema.js";
+
+const url = process.env.DATABASE_URL;
+if (!url) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+/** Raw postgres.js connection. Exported for migrations and explicit teardown. */
+export const sql = postgres(url);
+
+/** Shared Drizzle client. Downstream features (002 ingest, 004 loaders) import this. */
+export const db = drizzle(sql, { schema });
+
+export { schema };

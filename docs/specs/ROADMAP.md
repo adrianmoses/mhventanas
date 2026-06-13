@@ -13,7 +13,7 @@ through the real content pipeline. Proves the full vertical slice before scaling
 
 | ID | Feature | Status | Spec |
 |---|---|---|---|
-| 001 | Database schema + migrations (monsters, punish_guides, clips with slugs) | in-progress | [spec](001-db-schema-migrations/spec.md) |
+| 001 | Database schema + migrations (monsters, punish_guides, clips with slugs) | implemented | [spec](001-db-schema-migrations/spec.md) · [decision](001-db-schema-migrations/decision.md) |
 | 002 | MDX ingest pipeline (compile MDX, `<Clip>` component, idempotent upsert) | planned | — |
 | 003 | Media hosting (R2/S3 + CDN) + clip upload/reference flow | planned | — |
 | 004 | Routing + guide rendering (`/guias/:game/:monster[/:weapon]`, SSR) | planned | — |
@@ -35,3 +35,4 @@ through the real content pipeline. Proves the full vertical slice before scaling
 |---|---|
 | 2026-06-13 | Initial roadmap created |
 | 2026-06-13 | 001 specced; status → in-progress |
+| 2026-06-13 | 001 implemented; decision record added; status → implemented |
