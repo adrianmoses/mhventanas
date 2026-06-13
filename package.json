@@ -11,18 +11,29 @@
     "db:down": "docker compose down",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
+    "ingest": "tsx src/ingest/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^3.1.1",
     "drizzle-orm": "^0.45.2",
-    "postgres": "^3.4.9"
+    "gray-matter": "^4.0.3",
+    "postgres": "^3.4.9",
+    "unist-util-visit": "^5",
+    "zod": "^3"
   },
   "devDependencies": {
+    "@types/mdast": "^4.0.4",
     "@types/node": "^25.9.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
+    "mdast-util-mdx-jsx": "^3",
+    "react": "^19",
+    "react-dom": "^19",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"

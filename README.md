@@ -40,6 +40,16 @@ pnpm db:generate    # generar una migración SQL a partir de src/db/schema.ts
 pnpm db:down        # detener Postgres (añade `-v` para borrar el volumen)
 ```
 
+### Contenido (MDX)
+
+Las guías se escriben como MDX en `content/{juego}/{monstruo}/` (`index.mdx` para la
+guía general, `longsword.mdx` / `greatsword.mdx` por arma) y se ingieren en la base
+de datos:
+
+```bash
+pnpm ingest         # compilar el MDX de content/ y volcarlo en Postgres (idempotente)
+```
+
 ## Specs
 
 La documentación del proyecto vive en [`docs/specs/`](docs/specs/):
