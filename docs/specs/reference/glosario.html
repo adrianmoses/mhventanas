@@ -1,0 +1,200 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .site-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 2rem; }
+  .page-title { font-size: 32px; font-weight: 500; color: var(--color-text-primary); line-height: 1.2; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 3rem; max-width: 560px; }
+  .section { margin-bottom: 2.5rem; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .section-icon { width: 28px; height: 28px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .section-title { font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .moves-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .move-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.875rem 1rem; }
+  .move-name { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .move-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+  .divider { margin: 3rem 0 2rem; border: none; border-top: 0.5px solid var(--color-border-tertiary); }
+  .modifiers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+  .modifier-pill { display: flex; align-items: center; gap: 8px; padding: 0.5rem 0.875rem; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+  .modifier-tag { font-size: 12px; font-weight: 500; color: var(--color-text-info); background: var(--color-background-info); padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+  .modifier-def { font-size: 13px; color: var(--color-text-secondary); }
+  .weapon-row { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .weapon-card { flex: 1; min-width: 200px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.875rem 1rem; }
+  .weapon-abbr { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 99px; margin-bottom: 6px; }
+  .gs-abbr { background: #FAECE7; color: #993C1D; }
+  .ls-abbr { background: #E6F1FB; color: #185FA5; }
+  .weapon-fullname { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .weapon-style-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; margin-bottom: 4px; }
+  .gs-style { color: #993C1D; }
+  .ls-style { color: #185FA5; }
+  .weapon-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+  .phase-timeline { display: flex; gap: 0; margin-bottom: 1.5rem; }
+  .phase-step { flex: 1; padding: 0.75rem 1rem; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+  .phase-step:first-child { border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg); }
+  .phase-step:last-child { border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0; }
+  .phase-step + .phase-step { border-left: none; }
+  .phase-num { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 2px; }
+  .phase-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .phase-note { font-size: 12px; color: var(--color-text-secondary); }
+  .example-block { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-top: 0.5rem; }
+  .example-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin-bottom: 8px; }
+  .example-entry { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+  .example-entry:last-child { margin-bottom: 0; }
+  .ex-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); min-width: 160px; }
+  .ex-note { font-size: 13px; color: var(--color-text-secondary); }
+</style>
+
+<div class="page">
+  <p class="site-label">mhventanas.com</p>
+  <h1 class="page-title">Glosario de movimientos</h1>
+  <p class="page-subtitle">Nomenclatura estándar usada en todas las guías del sitio. Cada movimiento se nombra con un término base más un modificador cuando sea necesario.</p>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FAECE7;"><i class="ti ti-sword" style="font-size:14px;color:#993C1D;" aria-hidden="true"></i></div>
+      <span class="section-title">Armas — abreviaciones</span>
+    </div>
+    <div class="weapon-row">
+      <div class="weapon-card">
+        <span class="weapon-abbr gs-abbr">GS</span>
+        <div class="weapon-fullname">Gran Espada</div>
+        <div class="weapon-style-label gs-style">Lectura predictiva</div>
+        <div class="weapon-desc">Anticipa el movimiento y se posiciona antes del impacto. Alta recompensa, alto compromiso.</div>
+      </div>
+      <div class="weapon-card">
+        <span class="weapon-abbr ls-abbr">LS</span>
+        <div class="weapon-fullname">Espada Larga</div>
+        <div class="weapon-style-label ls-style">Lectura reactiva</div>
+        <div class="weapon-desc">Responde al movimiento en tiempo real. Contadores e interrupciones como herramienta principal.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E1F5EE;"><i class="ti ti-topology-ring" style="font-size:14px;color:#0F6E56;" aria-hidden="true"></i></div>
+      <span class="section-title">Fases del movimiento</span>
+    </div>
+    <div class="phase-timeline">
+      <div class="phase-step">
+        <div class="phase-num">01</div>
+        <div class="phase-name">Preparación</div>
+        <div class="phase-note">Animación de inicio — ventana GS</div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">02</div>
+        <div class="phase-name">Acción</div>
+        <div class="phase-note">Ataque o serie — ventana LS</div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">03</div>
+        <div class="phase-name">Final</div>
+        <div class="phase-note">Pausa breve o descanso</div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">04</div>
+        <div class="phase-name">Reposición</div>
+        <div class="phase-note">Puede encadenar nueva preparación</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FAEEDA;"><i class="ti ti-arrow-down" style="font-size:14px;color:#854F0B;" aria-hidden="true"></i></div>
+      <span class="section-title">Impactos</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Pisotón</div><div class="move-desc">Golpe con una pata hacia abajo. Base para variantes de pierna.</div></div>
+      <div class="move-card"><div class="move-name">Aplastamiento</div><div class="move-desc">Impacto con todo el cuerpo o barriga contra el suelo.</div></div>
+      <div class="move-card"><div class="move-name">Derrumbe</div><div class="move-desc">Caída o desplome encima del cazador.</div></div>
+    </div>
+    <div class="example-block" style="margin-top:10px;">
+      <div class="example-label">Ejemplo — Chatacabra</div>
+      <div class="example-entry"><span class="ex-name">Pisotón Simple</span><span class="ex-note">Un solo golpe. Inicio de cacería.</span></div>
+      <div class="example-entry"><span class="ex-name">Pisotón Doble</span><span class="ex-note">Dos golpes consecutivos con delay.</span></div>
+      <div class="example-entry"><span class="ex-name">Pisotón Erguido</span><span class="ex-note">Tercer golpe. Se levanta sobre patas traseras antes de impactar.</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FBEAF0;"><i class="ti ti-mouth" style="font-size:14px;color:#993556;" aria-hidden="true"></i></div>
+      <span class="section-title">Mordiscos y embestidas</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Mordisco</div><div class="move-desc">Ataque directo con la boca. Corto alcance, alta precisión.</div></div>
+      <div class="move-card"><div class="move-name">Embestida</div><div class="move-desc">Carga hacia adelante. Movimiento de desplazamiento estándar.</div></div>
+      <div class="move-card"><div class="move-name">Arremetida</div><div class="move-desc">Lanzamiento agresivo, mayor compromiso que la embestida.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#EEEDFE;"><i class="ti ti-arrow-wave-right-up" style="font-size:14px;color:#534AB7;" aria-hidden="true"></i></div>
+      <span class="section-title">Cola</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Coletazo</div><div class="move-desc">Barrido horizontal con la cola.</div></div>
+      <div class="move-card"><div class="move-name">Latigazo</div><div class="move-desc">Golpe rápido tipo látigo, más brusco que el coletazo.</div></div>
+      <div class="move-card"><div class="move-name">Giro de cola</div><div class="move-desc">Rotación completa usando la cola como arma.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E1F5EE;"><i class="ti ti-rotate-clockwise" style="font-size:14px;color:#0F6E56;" aria-hidden="true"></i></div>
+      <span class="section-title">Giros y barridos</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Giro</div><div class="move-desc">Rotación completa del cuerpo.</div></div>
+      <div class="move-card"><div class="move-name">Barrido</div><div class="move-desc">Movimiento de cabida o cola de lado a lado.</div></div>
+      <div class="move-card"><div class="move-name">Rotación</div><div class="move-desc">Giro telegráfico más lento. Mayor ventana.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E6F1FB;"><i class="ti ti-flame" style="font-size:14px;color:#185FA5;" aria-hidden="true"></i></div>
+      <span class="section-title">Proyectiles y elemento</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Escupida</div><div class="move-desc">Proyectil puntual lanzado desde la boca.</div></div>
+      <div class="move-card"><div class="move-name">Aliento</div><div class="move-desc">Ataque elemental continuo sostenido.</div></div>
+      <div class="move-card"><div class="move-name">Descarga</div><div class="move-desc">Explosión o ráfaga elemental de área.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#EAF3DE;"><i class="ti ti-arrow-up" style="font-size:14px;color:#3B6D11;" aria-hidden="true"></i></div>
+      <span class="section-title">Saltos y aéreos</span>
+    </div>
+    <div class="moves-grid">
+      <div class="move-card"><div class="move-name">Salto</div><div class="move-desc">Impulso básico hacia arriba o adelante.</div></div>
+      <div class="move-card"><div class="move-name">Zambullida</div><div class="move-desc">Caída en picado sobre el cazador.</div></div>
+      <div class="move-card"><div class="move-name">Planeo</div><div class="move-desc">Descenso prolongado en vuelo, típico de wyverns.</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#F1EFE8;"><i class="ti ti-adjustments-horizontal" style="font-size:14px;color:#5F5E5A;" aria-hidden="true"></i></div>
+      <span class="section-title">Modificadores</span>
+    </div>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.6;">Se añaden al término base para precisar variante, número de golpes o comportamiento especial.</p>
+    <div class="modifiers-grid">
+      <div class="modifier-pill"><span class="modifier-tag">Simple</span><span class="modifier-def">Un solo golpe</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Doble</span><span class="modifier-def">Dos golpes</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Triple</span><span class="modifier-def">Tres golpes</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Erguido</span><span class="modifier-def">Variante bípeda</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Cargado</span><span class="modifier-def">Con delay/carga</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Giratorio</span><span class="modifier-def">Variante rotacional</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Lateral</span><span class="modifier-def">Hacia un lado</span></div>
+      <div class="modifier-pill"><span class="modifier-tag">Frontal</span><span class="modifier-def">Hacia adelante</span></div>
+    </div>
+  </div>
+</div>
