@@ -5,7 +5,7 @@ import { discover } from "./discover.js";
 import { parseFile } from "./parse.js";
 import type { CompiledFile, CompiledGeneral, CompiledWeapon, MonsterRecord } from "./types.js";
 import { upsertMonster } from "./upsert.js";
-import { validateClipReferences, validateNoDuplicateClipSlugs } from "./validate.js";
+import { mergeMonsterClips } from "./validate.js";
 
 export interface IngestResult {
   monsters: number;
@@ -32,8 +32,7 @@ export async function ingest(opts: { contentRoot?: string } = {}): Promise<Inges
     } catch (e) {
       throw new Error(`${file.absPath}: failed to compile MDX — ${(e as Error).message}`);
     }
-    const cf = { ...parsed, code: result.code, referencedSlugs: result.referencedSlugs } as CompiledFile;
-    validateClipReferences(cf);
+    const cf = { ...parsed, code: result.code, clips: result.clips } as CompiledFile;
     compiled.push(cf);
   }
 
@@ -50,9 +49,9 @@ export async function ingest(opts: { contentRoot?: string } = {}): Promise<Inges
   for (const files of groups.values()) {
     const general = files.find((f): f is CompiledGeneral => f.kind === "general");
     if (!general) continue; // discover() guarantees this, but keep the type narrowed
-    validateNoDuplicateClipSlugs(general.game, general.monsterSlug, files);
     const weapons = files.filter((f): f is CompiledWeapon => f.kind === "weapon");
-    records.push({ game: general.game, monsterSlug: general.monsterSlug, general, weapons });
+    const clips = mergeMonsterClips(general.game, general.monsterSlug, files);
+    records.push({ game: general.game, monsterSlug: general.monsterSlug, general, weapons, clips });
   }
 
   // Phase 2 — write.

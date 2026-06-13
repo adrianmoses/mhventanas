@@ -15,6 +15,10 @@ build/
 .env.*
 !.env.example
 
+# Local WebM source for clips (uploaded to the CDN, never committed).
+# Root-anchored so test/fixtures/media/ stays tracked.
+/media/
+
 # Logs
 *.log
 npm-debug.log*

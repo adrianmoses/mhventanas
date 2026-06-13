@@ -3,18 +3,10 @@ import matter from "gray-matter";
 import { z } from "zod";
 import type { DiscoveredFile, ParsedFile } from "./types.js";
 
-const clipEntry = z.object({
-  slug: z.string().min(1),
-  // Not .url() — clip URLs may be placeholders until 003 wires the real CDN.
-  url: z.string().min(1),
-  caption: z.string().optional(),
-});
-
 export const generalFrontmatter = z
   .object({
     name: z.string().min(1),
     variant: z.string().optional(),
-    clips: z.array(clipEntry).default([]),
   })
   .strict();
 
@@ -22,11 +14,9 @@ export const weaponFrontmatter = z
   .object({
     // Authored as `published_at` (snake); mapped to the DB `publishedAt` column.
     published_at: z.coerce.date().optional(),
-    clips: z.array(clipEntry).default([]),
   })
   .strict();
 
-export type ClipEntry = z.infer<typeof clipEntry>;
 export type GeneralFrontmatter = z.infer<typeof generalFrontmatter>;
 export type WeaponFrontmatter = z.infer<typeof weaponFrontmatter>;
 
