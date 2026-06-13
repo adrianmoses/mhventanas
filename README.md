@@ -11,6 +11,35 @@ ataque) y guías por arma para **Espada Larga (Longsword)** y **Gran Espada
 
 TanStack Start · Nitro · PostgreSQL · MDX · clips WebM (object storage + CDN).
 
+## Development
+
+Requiere Node ≥ 24, pnpm y Docker.
+
+```bash
+pnpm install        # instalar dependencias
+cp .env.example .env  # configurar la conexión local
+pnpm db:up          # levantar Postgres 17 (docker-compose, puerto 5433)
+pnpm db:migrate     # aplicar migraciones
+```
+
+### Lint y tests
+
+```bash
+pnpm typecheck      # comprobación de tipos con TypeScript (primera línea de defensa)
+pnpm test           # ejecutar la suite de Vitest (requiere `pnpm db:up`)
+pnpm test:watch     # Vitest en modo watch
+```
+
+> Todavía no hay un linter dedicado (ESLint); `pnpm typecheck` cumple esa función
+> por ahora, en línea con la postura de pruebas del proyecto.
+
+### Base de datos
+
+```bash
+pnpm db:generate    # generar una migración SQL a partir de src/db/schema.ts
+pnpm db:down        # detener Postgres (añade `-v` para borrar el volumen)
+```
+
 ## Specs
 
 La documentación del proyecto vive en [`docs/specs/`](docs/specs/):

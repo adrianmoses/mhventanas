@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: mhventanas-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mhventanas
+      POSTGRES_PASSWORD: mhventanas
+      POSTGRES_DB: mhventanas
+    ports:
+      # Host port 5433 to avoid colliding with a local Postgres on 5432.
+      - "5433:5432"
+    volumes:
+      - mhventanas_pgdata:/var/lib/postgresql/data
+      - ./db/initdb.d:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mhventanas -d mhventanas"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  mhventanas_pgdata:
