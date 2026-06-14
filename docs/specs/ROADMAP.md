@@ -18,8 +18,8 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 003 | Media hosting (R2/S3 + CDN) + clip upload/reference flow | implemented | [spec](003-media-hosting/spec.md) · [decision](003-media-hosting/decision.md) |
 | 004 | Routing + guide rendering (`/guias/:game/:monster[/:weapon]`, SSR) | implemented | [spec](004-routing-guide-rendering/spec.md) · [decision](004-routing-guide-rendering/decision.md) |
 | 005 | Chatacabra general page content (estados, baiting, patrones) | implemented | [spec](005-chatacabra-general-content/spec.md) · [decision](005-chatacabra-general-content/decision.md) |
-| 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | planned | — |
-| 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | planned | — |
+| 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | implemented | [spec](006-chatacabra-longsword-content/spec.md) · [decision](006-chatacabra-longsword-content/decision.md) |
+| 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | implemented | [spec](007-chatacabra-greatsword-content/spec.md) · [decision](007-chatacabra-greatsword-content/decision.md) |
 | 008 | SEO + i18n polish + Playwright E2E on core routes | planned | — |
 
 ## Backlog / Deferred
@@ -55,3 +55,5 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-06-14 | 005 specced; status → in-progress |
 | 2026-06-14 | 005 implemented; decision record added; status → implemented |
 | 2026-06-14 | Backlog added (B1, B2) from 005 decision spec gaps |
+| 2026-06-14 | 006 + 007 specced; status → in-progress |
+| 2026-06-14 | 006 + 007 implemented; decision records added; status → implemented |
