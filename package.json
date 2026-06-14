@@ -13,32 +13,43 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "ingest": "tsx src/ingest/index.ts",
     "clips:upload": "tsx src/media/upload.ts",
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3",
     "@mdx-js/mdx": "^3.1.1",
+    "@tanstack/react-router": "^1.170.15",
+    "@tanstack/react-start": "^1.168.25",
     "drizzle-orm": "^0.45.2",
     "gray-matter": "^4.0.3",
+    "nitro": "3.0.260610-beta",
     "postgres": "^3.4.9",
     "unist-util-visit": "^5",
     "zod": "^3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/mdast": "^4.0.4",
+    "@types/mdx": "^2.0.14",
     "@types/node": "^25.9.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.2",
     "aws-sdk-client-mock": "^4",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "mdast-util-mdx-jsx": "^3",
-    "react": "^19",
-    "react-dom": "^19",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
+    "vite": "^8.0.16",
     "vitest": "^4.1.8"
   }
 }

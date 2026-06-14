@@ -8,7 +8,7 @@
 
 ## System Overview <!-- required -->
 
-TanStack Start renders guide pages server-side (via Nitro) by reading content from PostgreSQL.
+TanStack Start renders guide pages server-side (Vite build + Nitro server output) by reading content from PostgreSQL.
 **Git is the source of truth for content; Postgres is the read store.** Authors write MDX files
 in the repo. At build/deploy time an ingest pipeline parses and compiles each MDX file (resolving
 custom components such as `<Clip>`) and upserts the result into Postgres. Route loaders query
@@ -58,7 +58,11 @@ ingest pipeline  ──compile MDX, extract frontmatter + clip refs──▶  Po
 
 - **Object storage + CDN** — Cloudflare R2 or S3 for WebM clips (host TBD).
 - **PostgreSQL host** — managed Postgres (provider TBD).
-- **Nitro deploy target** — hosting platform TBD.
+- **Deploy target** — hosting platform TBD. Note (004): the installed TanStack Start build is
+  Vite-based; its default SSR output is a fetch handler, so the `nitro/vite` plugin (Nitro v3) is
+  added to compile a runnable Node server at `.output/server/index.mjs`, started with
+  `node .output/server/index.mjs` (reads `PORT`/`DATABASE_URL`). Any plain Node service instance
+  can host it; the specific platform is still TBD.
 
 ## Key Constraints <!-- required -->
 
@@ -102,11 +106,14 @@ Filo Espiritual, TCS).
 
 ## Open Decisions <!-- optional -->
 
-- Final choice of R2 vs S3, Postgres host, and Nitro deploy target.
+- Final choice of R2 vs S3, Postgres host, and the deploy target.
 - Whether ingest runs at build time (baked) or as a separate deploy step against a live DB.
-- Clip reference resolution: do `<Clip>` URLs get inlined at compile time or resolved at render
-  from the `clips` table by slug?
-- Whether `published_at` gates visibility (draft workflow) or is display-only metadata.
 - **Resolved (2026-06-13):** split routes (general + per-weapon pages, one MDX/`punish_guides`
   row each) over the prototype's single-page client-side weapon toggle — simpler authoring,
   better SEO/shareability. The general page may still surface weapon links at the top.
+- **Resolved (2026-06-14, 004):** clip reference resolution — `<Clip>` URLs are resolved at
+  render time from the `clips` table by slug (the loader builds a slug→URL map), keeping the CDN
+  host out of the stored MDX so a CDN move needs no re-ingest.
+- **Resolved (2026-06-14, 004):** `published_at` is a real visibility gate, not display-only — a
+  guide is live only when `published_at` is set and `<= now`; NULL/future guides 404 and are
+  dropped from weapon links, enforced in the route loaders.
