@@ -3,8 +3,9 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["node"],
+    "jsx": "react-jsx",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true,
@@ -14,5 +15,12 @@
     "verbatimModuleSyntax": true,
     "noEmit": true
   },
-  "include": ["src", "test", "drizzle.config.ts", "vitest.config.ts"]
+  "include": [
+    "src",
+    "test",
+    "drizzle.config.ts",
+    "vitest.config.ts",
+    "vite.config.ts",
+    "playwright.config.ts"
+  ]
 }

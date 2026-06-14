@@ -36,3 +36,4 @@ coverage/
 .playwright/
 test-results/
 playwright-report/
+/test/e2e/.auth/

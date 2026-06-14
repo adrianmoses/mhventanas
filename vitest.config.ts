@@ -8,6 +8,8 @@ if (!testDatabaseUrl) {
 
 export default defineConfig({
   test: {
+    // Playwright owns test/e2e; keep its *.spec.ts out of the Vitest run.
+    exclude: ["**/node_modules/**", "**/dist/**", "test/e2e/**"],
     globalSetup: ["./test/setup.ts"],
     // Point the shared db client (which reads DATABASE_URL) at the test database
     // so tests never touch dev data. CDN_BASE_URL lets ingest derive clip URLs

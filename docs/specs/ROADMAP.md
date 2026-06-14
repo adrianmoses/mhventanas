@@ -16,7 +16,7 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 001 | Database schema + migrations (monsters, punish_guides, clips with slugs) | implemented | [spec](001-db-schema-migrations/spec.md) · [decision](001-db-schema-migrations/decision.md) |
 | 002 | MDX ingest pipeline (compile MDX, `<Clip>` component, idempotent upsert) | implemented | [spec](002-mdx-ingest-pipeline/spec.md) · [decision](002-mdx-ingest-pipeline/decision.md) |
 | 003 | Media hosting (R2/S3 + CDN) + clip upload/reference flow | implemented | [spec](003-media-hosting/spec.md) · [decision](003-media-hosting/decision.md) |
-| 004 | Routing + guide rendering (`/guias/:game/:monster[/:weapon]`, SSR) | planned | — |
+| 004 | Routing + guide rendering (`/guias/:game/:monster[/:weapon]`, SSR) | implemented | [spec](004-routing-guide-rendering/spec.md) · [decision](004-routing-guide-rendering/decision.md) |
 | 005 | Chatacabra general page content (estados, baiting, patrones) | planned | — |
 | 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | planned | — |
 | 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | planned | — |
@@ -40,3 +40,5 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 2026-06-13 | 002 implemented; decision record added; status → implemented |
 | 2026-06-13 | 003 specced; status → in-progress |
 | 2026-06-13 | 003 implemented; decision record added; status → implemented |
+| 2026-06-14 | 004 specced; status → in-progress |
+| 2026-06-14 | 004 implemented; decision record added; status → implemented |

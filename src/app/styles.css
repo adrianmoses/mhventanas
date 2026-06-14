@@ -1,0 +1,89 @@
+:root {
+  --max-width: 44rem;
+  --fg: #1a1a1a;
+  --muted: #5a5a5a;
+  --accent: #8a1c1c;
+  --bg: #fbfaf8;
+  --border: #e4e0da;
+  font-family:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.page__nav {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.page__nav a {
+  color: var(--accent);
+}
+
+.weapon-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.weapon-links a {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.guide :is(h1, h2, h3) {
+  line-height: 1.25;
+}
+
+.clip {
+  margin: 1.5rem 0;
+}
+
+.clip__video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #000;
+  display: block;
+}
+
+.clip__caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+.clip--missing {
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.not-found {
+  text-align: center;
+  padding: 4rem 1.25rem;
+}
