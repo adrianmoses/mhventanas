@@ -11,6 +11,9 @@
 v1 milestone: **Chatacabra (Wilds)** shipped end-to-end — general + Longsword + Greatsword pages
 through the real content pipeline. Proves the full vertical slice before scaling content.
 
+> Note: 009 (homepage navigation) was surfaced after the v1 slice and is recommended **before** 008 —
+> the site is currently un-navigable from `/`, so SEO/E2E polish on unreachable pages is premature.
+
 | ID | Feature | Status | Spec |
 |---|---|---|---|
 | 001 | Database schema + migrations (monsters, punish_guides, clips with slugs) | implemented | [spec](001-db-schema-migrations/spec.md) · [decision](001-db-schema-migrations/decision.md) |
@@ -21,6 +24,7 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | implemented | [spec](006-chatacabra-longsword-content/spec.md) · [decision](006-chatacabra-longsword-content/decision.md) |
 | 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | implemented | [spec](007-chatacabra-greatsword-content/spec.md) · [decision](007-chatacabra-greatsword-content/decision.md) |
 | 008 | SEO + i18n polish + Playwright E2E on core routes | planned | — |
+| 009 | Homepage monster index + site navigation (DB-driven landing, home link) | in-progress | [spec](009-homepage-monster-index/spec.md) |
 
 ## Backlog / Deferred
 
@@ -57,3 +61,4 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-06-14 | Backlog added (B1, B2) from 005 decision spec gaps |
 | 2026-06-14 | 006 + 007 specced; status → in-progress |
 | 2026-06-14 | 006 + 007 implemented; decision records added; status → implemented |
+| 2026-06-16 | 009 (homepage monster index + navigation) added and specced; status → in-progress; recommended before 008 |
