@@ -20,6 +20,19 @@ body {
   margin: 0;
 }
 
+.site-header {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header a {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
 .page {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -33,6 +46,32 @@ body {
 
 .page__nav a {
   color: var(--accent);
+}
+
+.monster-index {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+}
+
+.monster-index li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.monster-index a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.monster-index__game {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: capitalize;
 }
 
 .weapon-links {

@@ -29,6 +29,14 @@ export interface WeaponData {
   clipMap: ClipMap;
 }
 
+/** One row of the homepage monster index: enough to render a guide link. */
+export interface MonsterIndexEntry {
+  name: string;
+  slug: string;
+  game: string;
+  variant: string | null;
+}
+
 type ClipRow = { slug: string; url: string; caption: string | null };
 
 function buildClipMap(rows: ClipRow[]): ClipMap {
@@ -86,6 +94,26 @@ export async function loadGeneralData(params: {
     clipMap: buildClipMap(clipRows),
     weapons,
   };
+}
+
+/**
+ * List monsters that have a general guide, for the homepage index. Gated on
+ * `overviewContent` (a monster without it would link to an empty page) rather
+ * than a publish flag — general pages have no `published_at` today. DB-driven so
+ * newly ingested monsters appear with no code change. Ordered by game then name
+ * for stable output.
+ */
+export async function loadMonsterIndex(): Promise<MonsterIndexEntry[]> {
+  return db
+    .select({
+      name: monsters.name,
+      slug: monsters.slug,
+      game: monsters.game,
+      variant: monsters.variant,
+    })
+    .from(monsters)
+    .where(isNotNull(monsters.overviewContent))
+    .orderBy(monsters.game, monsters.name);
 }
 
 /**

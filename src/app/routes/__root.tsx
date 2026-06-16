@@ -32,6 +32,9 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
+        <header className="site-header">
+          <Link to="/">MH Ventanas</Link>
+        </header>
         <Outlet />
         <Scripts />
       </body>

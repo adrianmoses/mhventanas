@@ -5,6 +5,30 @@ const LONGSWORD = "/guias/wilds/chatacabra/longsword";
 const GREATSWORD = "/guias/wilds/chatacabra/greatsword";
 const CLIP_URL = "https://cdn.test/wilds/chatacabra/salto-bilis.webm";
 
+test("homepage lists the monster guide server-side and links into it", async ({
+  request,
+}) => {
+  const res = await request.get("/");
+  expect(res.status()).toBe(200);
+  const html = await res.text();
+
+  // SSR: the index link is in the raw HTML, not injected after hydration.
+  expect(html).toContain("Chatacabra");
+  expect(html).toContain(GENERAL);
+});
+
+test("homepage links navigate to the guide, and the header returns home", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Chatacabra" }).click();
+  await expect(page).toHaveURL(GENERAL);
+
+  // The shared header home link closes the navigation loop.
+  await page.getByRole("link", { name: "MH Ventanas" }).click();
+  await expect(page).toHaveURL("/");
+});
+
 test("general page renders content server-side with only published weapon links", async ({
   request,
 }) => {
