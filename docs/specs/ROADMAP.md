@@ -24,7 +24,7 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | implemented | [spec](006-chatacabra-longsword-content/spec.md) · [decision](006-chatacabra-longsword-content/decision.md) |
 | 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | implemented | [spec](007-chatacabra-greatsword-content/spec.md) · [decision](007-chatacabra-greatsword-content/decision.md) |
 | 008 | SEO + i18n polish + Playwright E2E on core routes | planned | — |
-| 009 | Homepage monster index + site navigation (DB-driven landing, home link) | in-progress | [spec](009-homepage-monster-index/spec.md) |
+| 009 | Homepage monster index + site navigation (DB-driven landing, home link) | implemented | [spec](009-homepage-monster-index/spec.md) · [decision](009-homepage-monster-index/decision.md) |
 
 ## Backlog / Deferred
 
@@ -62,3 +62,4 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-06-14 | 006 + 007 specced; status → in-progress |
 | 2026-06-14 | 006 + 007 implemented; decision records added; status → implemented |
 | 2026-06-16 | 009 (homepage monster index + navigation) added and specced; status → in-progress; recommended before 008 |
+| 2026-06-16 | 009 implemented; decision record added; status → implemented |
