@@ -20,7 +20,7 @@ export default async function globalSetup(): Promise<void> {
   await runMigrations(url);
 
   const { sql } = await import("../../src/db/index.js");
-  await sql`TRUNCATE monsters, punish_guides, clips RESTART IDENTITY CASCADE`;
+  await sql`TRUNCATE monsters, punish_guides, clips, hunts RESTART IDENTITY CASCADE`;
 
   const { ingest } = await import("../../src/ingest/index.js");
   await ingest({ contentRoot: "test/fixtures/content" });

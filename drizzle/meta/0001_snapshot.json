@@ -1,0 +1,553 @@
+{
+  "id": "4c2357f8-6f1b-4e5d-99cd-4ba1fb6d35f2",
+  "prevId": "3d22390f-e6eb-4449-8d14-a91ca2af31f3",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.clips": {
+      "name": "clips",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "clips_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "monster_id": {
+          "name": "monster_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "punish_guide_id": {
+          "name": "punish_guide_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caption": {
+          "name": "caption",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "clips_monster_id_monsters_id_fk": {
+          "name": "clips_monster_id_monsters_id_fk",
+          "tableFrom": "clips",
+          "tableTo": "monsters",
+          "columnsFrom": [
+            "monster_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "clips_punish_guide_id_punish_guides_id_fk": {
+          "name": "clips_punish_guide_id_punish_guides_id_fk",
+          "tableFrom": "clips",
+          "tableTo": "punish_guides",
+          "columnsFrom": [
+            "punish_guide_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "clips_monster_slug_unique": {
+          "name": "clips_monster_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "monster_id",
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.hunts": {
+      "name": "hunts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "hunts_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "hunted_on": {
+          "name": "hunted_on",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "monster_name": {
+          "name": "monster_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "monster_slug": {
+          "name": "monster_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "hunt_rank",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "variant": {
+          "name": "variant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weapon": {
+          "name": "weapon",
+          "type": "hunt_weapon",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "time_seconds": {
+          "name": "time_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "carts": {
+          "name": "carts",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "result": {
+          "name": "result",
+          "type": "hunt_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "build": {
+          "name": "build",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hits": {
+          "name": "hits",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "causes": {
+          "name": "causes",
+          "type": "hunt_cause[]",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "cart_cause": {
+          "name": "cart_cause",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "learned": {
+          "name": "learned",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weaknesses": {
+          "name": "weaknesses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "missing_items": {
+          "name": "missing_items",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prep": {
+          "name": "prep",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "went_well": {
+          "name": "went_well",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "main_error": {
+          "name": "main_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_goal": {
+          "name": "next_goal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "hunts_monster_slug_idx": {
+          "name": "hunts_monster_slug_idx",
+          "columns": [
+            {
+              "expression": "monster_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "hunts_carts_range": {
+          "name": "hunts_carts_range",
+          "value": "\"hunts\".\"carts\" BETWEEN 0 AND 3"
+        },
+        "hunts_time_nonnegative": {
+          "name": "hunts_time_nonnegative",
+          "value": "\"hunts\".\"time_seconds\" IS NULL OR \"hunts\".\"time_seconds\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.monsters": {
+      "name": "monsters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "monsters_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "variant": {
+          "name": "variant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "game": {
+          "name": "game",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "overview_content": {
+          "name": "overview_content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "monsters_game_slug_unique": {
+          "name": "monsters_game_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "game",
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.punish_guides": {
+      "name": "punish_guides",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "punish_guides_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "monster_id": {
+          "name": "monster_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weapon_type": {
+          "name": "weapon_type",
+          "type": "weapon_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "punish_guides_monster_id_monsters_id_fk": {
+          "name": "punish_guides_monster_id_monsters_id_fk",
+          "tableFrom": "punish_guides",
+          "tableTo": "monsters",
+          "columnsFrom": [
+            "monster_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "punish_guides_monster_weapon_unique": {
+          "name": "punish_guides_monster_weapon_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "monster_id",
+            "weapon_type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.hunt_cause": {
+      "name": "hunt_cause",
+      "schema": "public",
+      "values": [
+        "tell",
+        "pos",
+        "greed",
+        "dodge",
+        "stamina",
+        "heal",
+        "wind",
+        "other"
+      ]
+    },
+    "public.hunt_rank": {
+      "name": "hunt_rank",
+      "schema": "public",
+      "values": [
+        "bajo",
+        "alto",
+        "maestro"
+      ]
+    },
+    "public.hunt_result": {
+      "name": "hunt_result",
+      "schema": "public",
+      "values": [
+        "ok",
+        "fail",
+        "quit"
+      ]
+    },
+    "public.hunt_weapon": {
+      "name": "hunt_weapon",
+      "schema": "public",
+      "values": [
+        "greatsword",
+        "longsword",
+        "sword-and-shield",
+        "dual-blades",
+        "hammer",
+        "hunting-horn",
+        "lance",
+        "gunlance",
+        "switch-axe",
+        "charge-blade",
+        "insect-glaive",
+        "bow",
+        "light-bowgun",
+        "heavy-bowgun"
+      ]
+    },
+    "public.weapon_type": {
+      "name": "weapon_type",
+      "schema": "public",
+      "values": [
+        "longsword",
+        "greatsword"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

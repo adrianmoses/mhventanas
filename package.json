@@ -13,6 +13,7 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "ingest": "tsx src/ingest/index.ts",
     "clips:upload": "tsx src/media/upload.ts",
+    "hunts:export": "tsx src/db/export-hunts.ts",
     "dev": "vite dev",
     "build": "vite build",
     "start": "node .output/server/index.mjs",

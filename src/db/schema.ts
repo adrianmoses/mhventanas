@@ -2,10 +2,16 @@ import {
   pgTable,
   pgEnum,
   bigint,
+  check,
+  date,
+  index,
+  integer,
+  smallint,
   text,
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 /**
  * Weapon types covered by punish guides. Closed set, central to routing — kept
@@ -78,4 +84,84 @@ export const clips = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [unique("clips_monster_slug_unique").on(t.monsterId, t.slug)],
+);
+
+/**
+ * Weapons a hunt can be logged with in the cuaderno (010). All 14 weapons —
+ * deliberately separate from `weapon_type`, which stays scoped to the guides
+ * (LS/GS). Spanish labels live in src/app/cuaderno/labels.ts.
+ */
+export const huntWeapon = pgEnum("hunt_weapon", [
+  "greatsword",
+  "longsword",
+  "sword-and-shield",
+  "dual-blades",
+  "hammer",
+  "hunting-horn",
+  "lance",
+  "gunlance",
+  "switch-axe",
+  "charge-blade",
+  "insect-glaive",
+  "bow",
+  "light-bowgun",
+  "heavy-bowgun",
+]);
+
+export const huntRank = pgEnum("hunt_rank", ["bajo", "alto", "maestro"]);
+
+/** ok = Completada, fail = Fallida, quit = Abandonada. */
+export const huntResult = pgEnum("hunt_result", ["ok", "fail", "quit"]);
+
+/** "Por qué te golpearon" — closed set of causes, tagged per hunt. */
+export const huntCause = pgEnum("hunt_cause", [
+  "tell",
+  "pos",
+  "greed",
+  "dodge",
+  "stamina",
+  "heal",
+  "wind",
+  "other",
+]);
+
+/**
+ * One logged hunt in the owner's cuaderno (010). Primary data — unlike the
+ * guide tables it is NOT rebuildable from git, and ingest never touches it.
+ * `monsterName` is free text (no FK to `monsters`: the log covers monsters
+ * without guides); `monsterSlug` is derived from it on save and drives
+ * /cuaderno/monstruo/:slug. `timeSeconds` is NULL when no time was recorded.
+ */
+export const hunts = pgTable(
+  "hunts",
+  {
+    id: bigint("id", { mode: "number" }).generatedAlwaysAsIdentity().primaryKey(),
+    huntedOn: date("hunted_on", { mode: "string" }).notNull(),
+    monsterName: text("monster_name").notNull(),
+    monsterSlug: text("monster_slug").notNull(),
+    rank: huntRank("rank").notNull(),
+    variant: text("variant"),
+    weapon: huntWeapon("weapon").notNull(),
+    timeSeconds: integer("time_seconds"),
+    carts: smallint("carts").notNull().default(0),
+    result: huntResult("result").notNull(),
+    build: text("build"),
+    hits: text("hits"),
+    causes: huntCause("causes").array().notNull().default(sql`'{}'`),
+    cartCause: text("cart_cause"),
+    learned: text("learned"),
+    weaknesses: text("weaknesses"),
+    missingItems: text("missing_items"),
+    prep: text("prep"),
+    wentWell: text("went_well"),
+    mainError: text("main_error"),
+    nextGoal: text("next_goal"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("hunts_monster_slug_idx").on(t.monsterSlug),
+    check("hunts_carts_range", sql`${t.carts} BETWEEN 0 AND 3`),
+    check("hunts_time_nonnegative", sql`${t.timeSeconds} IS NULL OR ${t.timeSeconds} >= 0`),
+  ],
 );
