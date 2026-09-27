@@ -1,0 +1,41 @@
+# Fly.io app config (B5). Set `app` to the name chosen at `fly launch --no-deploy`
+# and `primary_region` to the region closest to the Neon project.
+# Secrets (never in this file): DATABASE_URL, SESSION_SECRET,
+# CUADERNO_OWNER_SECRET, CDN_BASE_URL — see README "Despliegue".
+
+app = "mhventanas"
+primary_region = "mad"
+
+[build]
+
+[deploy]
+  # Runs in a temporary machine with the new image before it takes traffic:
+  # apply migrations, then re-ingest content/ (idempotent). A failure aborts
+  # the deploy and the previous release keeps serving.
+  release_command = "npm run release"
+
+# Explicit [[services]] rather than [http_service] so the health check can be
+# TCP-only: an HTTP check against a (DB-backed) page would query Neon every
+# interval and keep its compute from ever suspending.
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+  # Scale to zero when idle; the first request after a quiet period starts the
+  # machine (and wakes Neon). Cheapest option at light traffic.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.tcp_checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"

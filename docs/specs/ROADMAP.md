@@ -38,7 +38,7 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 
 | B3 | Cuaderno login hardening — throttle `/cuaderno/entrar` and/or enforce a minimum `CUADERNO_OWNER_SECRET` length; nothing currently limits brute-force attempts on the single owner secret. | proposed | [010 decision](010-cuaderno-caza/decision.md) |
 | B4 | Cuaderno restore + scheduled backup — `hunts` is the only non-rebuildable table; `pnpm hunts:export` exists but there is no `hunts:import` and no schedule. Neon (chosen host) gives point-in-time restore, but its window on low-cost plans is short, so a scheduled export is still wanted. | proposed | [010 decision](010-cuaderno-caza/decision.md) |
-| B5 | Fly.io deploy setup — Dockerfile for the Nitro server, `fly.toml` with a `release_command` for `db:migrate` + `ingest`, `fly secrets` for runtime env (Neon direct `DATABASE_URL`), R2 public/CDN domain for `CDN_BASE_URL`, and provisioning the Neon project in the Fly app's region. | proposed | [ARCHITECTURE](ARCHITECTURE.md) (deploy target + Postgres host resolved) |
+| B5 | Fly.io deploy setup — Dockerfile for the Nitro server, `fly.toml` with a `release_command` for `db:migrate` + `ingest`, `fly secrets` for runtime env (Neon direct `DATABASE_URL`), R2 public/CDN domain for `CDN_BASE_URL`, and provisioning the Neon project in the Fly app's region. | implemented | [ARCHITECTURE](ARCHITECTURE.md) · [decision](B5-fly-deploy/decision.md) |
 
 ## Status Values
 
@@ -73,3 +73,4 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-09-27 | Backlog added (B3, B4) from 010 decision spec gaps |
 | 2026-09-27 | Deploy target resolved (Fly.io); backlog B5 added for deploy setup |
 | 2026-09-27 | Postgres host resolved (Neon); B4 and B5 updated |
+| 2026-09-27 | B5 implemented (Dockerfile, fly.toml, release step, README deploy docs); status → implemented |
