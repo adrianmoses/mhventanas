@@ -34,6 +34,9 @@ function RootDocument() {
       <body>
         <header className="site-header">
           <Link to="/">MH Ventanas</Link>
+          <nav className="site-header__nav">
+            <Link to="/cuaderno">Cuaderno</Link>
+          </nav>
         </header>
         <Outlet />
         <Scripts />

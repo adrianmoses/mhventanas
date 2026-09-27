@@ -10,7 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CuadernoIndexRouteImport } from './routes/cuaderno.index'
+import { Route as CuadernoNuevaRouteImport } from './routes/cuaderno.nueva'
+import { Route as CuadernoEntrarRouteImport } from './routes/cuaderno.entrar'
 import { Route as GuiasGameMonsterRouteImport } from './routes/guias.$game.$monster'
+import { Route as CuadernoMonstruoSlugRouteImport } from './routes/cuaderno.monstruo.$slug'
+import { Route as CuadernoIdEditarRouteImport } from './routes/cuaderno.$id.editar'
 import { Route as GuiasGameMonsterWeaponRouteImport } from './routes/guias.$game.$monster.$weapon'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +23,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CuadernoIndexRoute = CuadernoIndexRouteImport.update({
+  id: '/cuaderno/',
+  path: '/cuaderno/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuadernoNuevaRoute = CuadernoNuevaRouteImport.update({
+  id: '/cuaderno/nueva',
+  path: '/cuaderno/nueva',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuadernoEntrarRoute = CuadernoEntrarRouteImport.update({
+  id: '/cuaderno/entrar',
+  path: '/cuaderno/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuiasGameMonsterRoute = GuiasGameMonsterRouteImport.update({
   id: '/guias/$game/$monster',
   path: '/guias/$game/$monster',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuadernoMonstruoSlugRoute = CuadernoMonstruoSlugRouteImport.update({
+  id: '/cuaderno/monstruo/$slug',
+  path: '/cuaderno/monstruo/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuadernoIdEditarRoute = CuadernoIdEditarRouteImport.update({
+  id: '/cuaderno/$id/editar',
+  path: '/cuaderno/$id/editar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuiasGameMonsterWeaponRoute = GuiasGameMonsterWeaponRouteImport.update({
@@ -31,34 +61,75 @@ const GuiasGameMonsterWeaponRoute = GuiasGameMonsterWeaponRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cuaderno/entrar': typeof CuadernoEntrarRoute
+  '/cuaderno/nueva': typeof CuadernoNuevaRoute
+  '/cuaderno/': typeof CuadernoIndexRoute
+  '/cuaderno/$id/editar': typeof CuadernoIdEditarRoute
+  '/cuaderno/monstruo/$slug': typeof CuadernoMonstruoSlugRoute
   '/guias/$game/$monster': typeof GuiasGameMonsterRouteWithChildren
   '/guias/$game/$monster/$weapon': typeof GuiasGameMonsterWeaponRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cuaderno/entrar': typeof CuadernoEntrarRoute
+  '/cuaderno/nueva': typeof CuadernoNuevaRoute
+  '/cuaderno': typeof CuadernoIndexRoute
+  '/cuaderno/$id/editar': typeof CuadernoIdEditarRoute
+  '/cuaderno/monstruo/$slug': typeof CuadernoMonstruoSlugRoute
   '/guias/$game/$monster': typeof GuiasGameMonsterRouteWithChildren
   '/guias/$game/$monster/$weapon': typeof GuiasGameMonsterWeaponRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cuaderno/entrar': typeof CuadernoEntrarRoute
+  '/cuaderno/nueva': typeof CuadernoNuevaRoute
+  '/cuaderno/': typeof CuadernoIndexRoute
+  '/cuaderno/$id/editar': typeof CuadernoIdEditarRoute
+  '/cuaderno/monstruo/$slug': typeof CuadernoMonstruoSlugRoute
   '/guias/$game/$monster': typeof GuiasGameMonsterRouteWithChildren
   '/guias/$game/$monster/$weapon': typeof GuiasGameMonsterWeaponRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/guias/$game/$monster' | '/guias/$game/$monster/$weapon'
+  fullPaths:
+    | '/'
+    | '/cuaderno/entrar'
+    | '/cuaderno/nueva'
+    | '/cuaderno/'
+    | '/cuaderno/$id/editar'
+    | '/cuaderno/monstruo/$slug'
+    | '/guias/$game/$monster'
+    | '/guias/$game/$monster/$weapon'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/guias/$game/$monster' | '/guias/$game/$monster/$weapon'
+  to:
+    | '/'
+    | '/cuaderno/entrar'
+    | '/cuaderno/nueva'
+    | '/cuaderno'
+    | '/cuaderno/$id/editar'
+    | '/cuaderno/monstruo/$slug'
+    | '/guias/$game/$monster'
+    | '/guias/$game/$monster/$weapon'
   id:
     | '__root__'
     | '/'
+    | '/cuaderno/entrar'
+    | '/cuaderno/nueva'
+    | '/cuaderno/'
+    | '/cuaderno/$id/editar'
+    | '/cuaderno/monstruo/$slug'
     | '/guias/$game/$monster'
     | '/guias/$game/$monster/$weapon'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CuadernoEntrarRoute: typeof CuadernoEntrarRoute
+  CuadernoNuevaRoute: typeof CuadernoNuevaRoute
+  CuadernoIndexRoute: typeof CuadernoIndexRoute
+  CuadernoIdEditarRoute: typeof CuadernoIdEditarRoute
+  CuadernoMonstruoSlugRoute: typeof CuadernoMonstruoSlugRoute
   GuiasGameMonsterRoute: typeof GuiasGameMonsterRouteWithChildren
 }
 
@@ -71,11 +142,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cuaderno/': {
+      id: '/cuaderno/'
+      path: '/cuaderno'
+      fullPath: '/cuaderno/'
+      preLoaderRoute: typeof CuadernoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuaderno/nueva': {
+      id: '/cuaderno/nueva'
+      path: '/cuaderno/nueva'
+      fullPath: '/cuaderno/nueva'
+      preLoaderRoute: typeof CuadernoNuevaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuaderno/entrar': {
+      id: '/cuaderno/entrar'
+      path: '/cuaderno/entrar'
+      fullPath: '/cuaderno/entrar'
+      preLoaderRoute: typeof CuadernoEntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guias/$game/$monster': {
       id: '/guias/$game/$monster'
       path: '/guias/$game/$monster'
       fullPath: '/guias/$game/$monster'
       preLoaderRoute: typeof GuiasGameMonsterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuaderno/monstruo/$slug': {
+      id: '/cuaderno/monstruo/$slug'
+      path: '/cuaderno/monstruo/$slug'
+      fullPath: '/cuaderno/monstruo/$slug'
+      preLoaderRoute: typeof CuadernoMonstruoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuaderno/$id/editar': {
+      id: '/cuaderno/$id/editar'
+      path: '/cuaderno/$id/editar'
+      fullPath: '/cuaderno/$id/editar'
+      preLoaderRoute: typeof CuadernoIdEditarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guias/$game/$monster/$weapon': {
@@ -101,6 +207,11 @@ const GuiasGameMonsterRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CuadernoEntrarRoute: CuadernoEntrarRoute,
+  CuadernoNuevaRoute: CuadernoNuevaRoute,
+  CuadernoIndexRoute: CuadernoIndexRoute,
+  CuadernoIdEditarRoute: CuadernoIdEditarRoute,
+  CuadernoMonstruoSlugRoute: CuadernoMonstruoSlugRoute,
   GuiasGameMonsterRoute: GuiasGameMonsterRouteWithChildren,
 }
 export const routeTree = rootRouteImport

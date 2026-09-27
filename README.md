@@ -67,6 +67,24 @@ de datos:
 pnpm ingest         # compilar el MDX de content/ y volcarlo en Postgres (idempotente)
 ```
 
+### Cuaderno de caza
+
+`/cuaderno` es el registro de cacerías del autor: la lectura es pública y solo el
+autor puede registrar, editar o borrar cacerías, tras entrar en `/cuaderno/entrar`.
+Necesita dos variables de entorno (ver `.env.example`):
+
+- `CUADERNO_OWNER_SECRET` — la clave para entrar.
+- `SESSION_SECRET` — clave de cifrado de la cookie de sesión (mínimo 32 caracteres;
+  `openssl rand -base64 32`).
+
+A diferencia de las guías, la tabla `hunts` **no** se puede reconstruir desde git, así
+que hay que hacer copias de seguridad:
+
+```bash
+pnpm hunts:export                      # volcar todas las cacerías como JSON a stdout
+pnpm hunts:export backups/hunts.json   # … o a un fichero
+```
+
 ## Specs
 
 La documentación del proyecto vive en [`docs/specs/`](docs/specs/):
