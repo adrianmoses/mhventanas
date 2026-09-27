@@ -37,7 +37,8 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | B2 | General-page visibility gate — `published_at` is weapon-only (`punish_guides`), so a monster overview page with draft/`TODO` content cannot be hidden. Only needed if a draft workflow for general pages is wanted; ties to the OVERVIEW open question on `published_at` semantics. | proposed | [005 decision](005-chatacabra-general-content/decision.md) |
 
 | B3 | Cuaderno login hardening — throttle `/cuaderno/entrar` and/or enforce a minimum `CUADERNO_OWNER_SECRET` length; nothing currently limits brute-force attempts on the single owner secret. | proposed | [010 decision](010-cuaderno-caza/decision.md) |
-| B4 | Cuaderno restore + scheduled backup — `hunts` is the only non-rebuildable table; `pnpm hunts:export` exists but there is no `hunts:import` and no schedule. Ties to the open Postgres-host decision. | proposed | [010 decision](010-cuaderno-caza/decision.md) |
+| B4 | Cuaderno restore + scheduled backup — `hunts` is the only non-rebuildable table; `pnpm hunts:export` exists but there is no `hunts:import` and no schedule. Neon (chosen host) gives point-in-time restore, but its window on low-cost plans is short, so a scheduled export is still wanted. | proposed | [010 decision](010-cuaderno-caza/decision.md) |
+| B5 | Fly.io deploy setup — Dockerfile for the Nitro server, `fly.toml` with a `release_command` for `db:migrate` + `ingest`, `fly secrets` for runtime env (Neon direct `DATABASE_URL`), R2 public/CDN domain for `CDN_BASE_URL`, and provisioning the Neon project in the Fly app's region. | proposed | [ARCHITECTURE](ARCHITECTURE.md) (deploy target + Postgres host resolved) |
 
 ## Status Values
 
@@ -70,3 +71,5 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-09-27 | 010 (cuaderno de caza) added and specced; status → in-progress |
 | 2026-09-27 | 010 implemented; decision record added; status → implemented |
 | 2026-09-27 | Backlog added (B3, B4) from 010 decision spec gaps |
+| 2026-09-27 | Deploy target resolved (Fly.io); backlog B5 added for deploy setup |
+| 2026-09-27 | Postgres host resolved (Neon); B4 and B5 updated |
