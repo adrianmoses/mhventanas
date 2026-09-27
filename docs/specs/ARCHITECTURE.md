@@ -25,7 +25,13 @@ repo body — they live on object storage behind a CDN and are referenced by URL
 3. **PostgreSQL** — read store. Tables: `monsters`, `punish_guides`, `clips` (see Data Flow).
 4. **TanStack Start routes** — `/guias/:game/:monster` (general) and
    `/guias/:game/:monster/:weapon` (weapon-specific). Loaders resolve slugs → DB rows.
-5. **Media (object storage + CDN)** — Cloudflare R2 or S3 hosting WebM clips, served via CDN and
+5. **Cuaderno de caza (009)** — the owner's hunt log. Public reads at `/cuaderno` and
+   `/cuaderno/monstruo/:slug`; owner-only forms at `/cuaderno/nueva` and
+   `/cuaderno/:id/editar`, behind a login at `/cuaderno/entrar` (single
+   `CUADERNO_OWNER_SECRET`, sealed session cookie keyed by `SESSION_SECRET`). Writes go
+   through TanStack Start server functions that each check the session. This is the app's
+   only write path.
+6. **Media (object storage + CDN)** — Cloudflare R2 or S3 hosting WebM clips, served via CDN and
    referenced by URL from `clips` rows / MDX `<Clip>`.
 
 ## Data Flow <!-- required -->
@@ -54,6 +60,12 @@ ingest pipeline  ──compile MDX, extract frontmatter + clip refs──▶  Po
   - WebM metadata; linked to a monster and optionally to a specific punish guide. URL points at
     the CDN. Referenced from MDX via `<Clip slug="..." />`.
 
+- `hunts (id, hunted_on, monster_name, monster_slug, rank, variant, weapon, time_seconds,
+  carts, result, build, hits, causes[], cart_cause, learned, weaknesses, missing_items, prep,
+  went_well, main_error, next_goal, created_at, updated_at)` — the cuaderno (009). It is
+  standalone, with no FK to `monsters`, and `weapon` uses its own 14-value `hunt_weapon`
+  enum, separate from `weapon_type`.
+
 ## External Dependencies <!-- required -->
 
 - **Object storage + CDN** — Cloudflare R2 or S3 for WebM clips (host TBD).
@@ -69,8 +81,11 @@ ingest pipeline  ──compile MDX, extract frontmatter + clip refs──▶  Po
 - **Spanish-only** content at launch; copy, slugs, and captions in Spanish.
 - **SEO-friendly SSR** — guide pages must render server-side with proper metadata.
 - **WebM playback** — clips autoplay, loop, muted, inline; must degrade gracefully.
-- **Git as source of truth** — Postgres is always rebuildable from MDX via re-ingest; ingest must
-  be idempotent (upsert by slug, not blind insert).
+- **Git as source of truth** — the guide tables (`monsters`, `punish_guides`, `clips`) are always
+  rebuildable from MDX via re-ingest; ingest must be idempotent (upsert by slug, not blind
+  insert). **Exception (009):** `hunts` is primary data written through the app. It cannot be
+  rebuilt from git, ingest never touches it, and it is backed up with `pnpm hunts:export`
+  (JSON).
 
 ## Design Inspiration <!-- optional -->
 

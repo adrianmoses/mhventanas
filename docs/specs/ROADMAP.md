@@ -21,6 +21,7 @@ through the real content pipeline. Proves the full vertical slice before scaling
 | 006 | Chatacabra Longsword page content (contras, Sakura Slash, Iai) | implemented | [spec](006-chatacabra-longsword-content/spec.md) · [decision](006-chatacabra-longsword-content/decision.md) |
 | 007 | Chatacabra Greatsword page content (offsets, TCS, tiempos de carga) | implemented | [spec](007-chatacabra-greatsword-content/spec.md) · [decision](007-chatacabra-greatsword-content/decision.md) |
 | 008 | SEO + i18n polish + Playwright E2E on core routes | planned | — |
+| 009 | Cuaderno de caza — owner hunt log (public read, login-gated writes, 14 weapons) | implemented | [spec](009-cuaderno-caza/spec.md) · [decision](009-cuaderno-caza/decision.md) |
 
 ## Backlog / Deferred
 
@@ -30,6 +31,9 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 |---|---|---|---|
 | B1 | Content publish-readiness checks — fail CI when a to-be-published guide still contains a `TODO` marker, and flag `<Clip>` slugs that have no uploaded WebM. De-risks the content fill pass before any public deploy. | proposed | [005 decision](005-chatacabra-general-content/decision.md) |
 | B2 | General-page visibility gate — `published_at` is weapon-only (`punish_guides`), so a monster overview page with draft/`TODO` content cannot be hidden. Only needed if a draft workflow for general pages is wanted; ties to the OVERVIEW open question on `published_at` semantics. | proposed | [005 decision](005-chatacabra-general-content/decision.md) |
+
+| B3 | Cuaderno login hardening — throttle `/cuaderno/entrar` and/or enforce a minimum `CUADERNO_OWNER_SECRET` length; nothing currently limits brute-force attempts on the single owner secret. | proposed | [009 decision](009-cuaderno-caza/decision.md) |
+| B4 | Cuaderno restore + scheduled backup — `hunts` is the only non-rebuildable table; `pnpm hunts:export` exists but there is no `hunts:import` and no schedule. Ties to the open Postgres-host decision. | proposed | [009 decision](009-cuaderno-caza/decision.md) |
 
 ## Status Values
 
@@ -57,3 +61,6 @@ Surfaced follow-up candidates not yet committed to the numbered v1 sequence. Eac
 | 2026-06-14 | Backlog added (B1, B2) from 005 decision spec gaps |
 | 2026-06-14 | 006 + 007 specced; status → in-progress |
 | 2026-06-14 | 006 + 007 implemented; decision records added; status → implemented |
+| 2026-09-27 | 009 (cuaderno de caza) added and specced; status → in-progress |
+| 2026-09-27 | 009 implemented; decision record added; status → implemented |
+| 2026-09-27 | Backlog added (B3, B4) from 009 decision spec gaps |

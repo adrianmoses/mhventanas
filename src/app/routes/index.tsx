@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,6 +15,9 @@ function Home() {
         Guías de Monster Hunter en español centradas en las{" "}
         <strong>ventanas de castigo</strong>: cuándo y cómo atacar a cada
         monstruo de forma segura.
+      </p>
+      <p className="home-links">
+        <Link to="/cuaderno">Cuaderno de caza</Link>
       </p>
     </main>
   );

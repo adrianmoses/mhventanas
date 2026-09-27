@@ -8,6 +8,11 @@ if (!TEST_DB) {
 
 const PORT = 4799;
 
+// Fixed cuaderno (009) secrets for the E2E server; the specs log in with
+// E2E_OWNER_SECRET. Never used outside tests.
+export const E2E_OWNER_SECRET = "e2e-owner-secret";
+const E2E_SESSION_SECRET = "e2e-session-secret-at-least-32-characters";
+
 // Smoke E2E for the guide routes. Builds the app and serves the real production
 // artifact (the Nitro Node server, `node .output/server/index.mjs`) so SSR + clean
 // hydration are exercised exactly as a deployed instance would. The server reads
@@ -25,6 +30,11 @@ export default defineConfig({
     port: PORT,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    env: { DATABASE_URL: TEST_DB, PORT: String(PORT) },
+    env: {
+      DATABASE_URL: TEST_DB,
+      PORT: String(PORT),
+      CUADERNO_OWNER_SECRET: E2E_OWNER_SECRET,
+      SESSION_SECRET: E2E_SESSION_SECRET,
+    },
   },
 });
