@@ -43,6 +43,7 @@ windows, charge timing) — with video showing the timing rather than describing
 - **MDX** — authoring format for guide content; source of truth lives in the repo.
 - **WebM** — looped, muted, autoplay clips for moves/attacks; hosted on object storage + CDN.
 - **TypeScript** throughout.
+- **Hosting** — Fly.io (Nitro Node server), Neon (Postgres), Cloudflare R2 (clips).
 
 ## Testing Suite <!-- required -->
 
@@ -54,6 +55,5 @@ Pragmatic posture (this section is load-bearing — decision records cite it as 
 
 ## Open Questions <!-- optional -->
 
-- Deploy/hosting target for Nitro and the Postgres host are not yet chosen.
 - Whether clip metadata needs full localization fields (captions/alt text) beyond Spanish.
 - Whether `published_at` implies a draft/preview workflow, or is just a display date.

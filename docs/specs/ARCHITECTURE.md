@@ -31,8 +31,8 @@ repo body — they live on object storage behind a CDN and are referenced by URL
    `CUADERNO_OWNER_SECRET`, sealed session cookie keyed by `SESSION_SECRET`). Writes go
    through TanStack Start server functions that each check the session. This is the app's
    only write path.
-6. **Media (object storage + CDN)** — Cloudflare R2 or S3 hosting WebM clips, served via CDN and
-   referenced by URL from `clips` rows / MDX `<Clip>`.
+6. **Media (object storage + CDN)** — Cloudflare R2 hosting WebM clips, served via its public
+   bucket / CDN domain and referenced by URL from `clips` rows / MDX `<Clip>`.
 
 ## Data Flow <!-- required -->
 
@@ -68,13 +68,27 @@ ingest pipeline  ──compile MDX, extract frontmatter + clip refs──▶  Po
 
 ## External Dependencies <!-- required -->
 
-- **Object storage + CDN** — Cloudflare R2 or S3 for WebM clips (host TBD).
-- **PostgreSQL host** — managed Postgres (provider TBD).
-- **Deploy target** — hosting platform TBD. Note (004): the installed TanStack Start build is
-  Vite-based; its default SSR output is a fetch handler, so the `nitro/vite` plugin (Nitro v3) is
-  added to compile a runnable Node server at `.output/server/index.mjs`, started with
-  `node .output/server/index.mjs` (reads `PORT`/`DATABASE_URL`). Any plain Node service instance
-  can host it; the specific platform is still TBD.
+- **Object storage + CDN** — Cloudflare R2 for WebM clips (chosen in 003; accessed through the
+  S3 API so the code stays provider-agnostic).
+- **PostgreSQL host** — **Neon** (serverless Postgres). The Fly server is a long-lived process,
+  so it uses Neon's **direct** (non-pooled) connection string with the existing postgres.js pool;
+  migrations also use the direct string. Neon requires TLS (`?sslmode=require` in
+  `DATABASE_URL`); Neon's default string also carries `channel_binding=require`, which must be
+  removed — postgres.js forwards unknown URL params as server startup parameters and the
+  connection fails. The pool sets `idle_timeout: 60` so idle connections close before Neon
+  suspends and drops them. Place the Neon project in the region closest to the Fly app. Neon scales
+  compute to zero when idle, so the first query after a quiet period pays a short wake-up.
+  Neon's point-in-time restore covers `hunts`, but the restore window on the low-cost plans is
+  short, so `pnpm hunts:export` backups (B4) still matter.
+- **Deploy target** — **Fly.io**, running the Nitro Node server as a long-lived process. Note
+  (004): the installed TanStack Start build is Vite-based; its default SSR output is a fetch
+  handler, so the `nitro/vite` plugin (Nitro v3) is added to compile a runnable Node server at
+  `.output/server/index.mjs`, started with `node .output/server/index.mjs` (reads
+  `PORT`/`DATABASE_URL`). On Fly this runs from a Docker image (`Dockerfile`, `fly.toml`),
+  scaled to zero when idle (`auto_stop_machines`) with a TCP-only health check so checks never
+  query Neon; runtime secrets
+  (`DATABASE_URL`, `SESSION_SECRET`, `CUADERNO_OWNER_SECRET`) are set with `fly secrets`. R2
+  credentials are not needed at runtime — only locally for `pnpm clips:upload`.
 
 ## Key Constraints <!-- required -->
 
@@ -121,8 +135,22 @@ Filo Espiritual, TCS).
 
 ## Open Decisions <!-- optional -->
 
-- Final choice of R2 vs S3, Postgres host, and the deploy target.
-- Whether ingest runs at build time (baked) or as a separate deploy step against a live DB.
+- **Resolved (2026-06-13, 003):** R2 over S3 for clips — zero egress for looped video, CDN
+  built in.
+- **Resolved (2026-09-27):** deploy target is **Fly.io** (long-lived Node server) over
+  serverless. The server is already a plain Node process, so it runs unchanged; a persistent
+  process keeps the module-level postgres.js pool (`src/db/client.ts`) valid without a
+  transaction-mode pooler; and there are no cold starts on SSR pages. Cloudflare Workers was
+  ruled out regardless: `runMdx` (`src/app/mdx/run-content.ts`) evaluates stored MDX with
+  `runSync`, which relies on runtime code generation that Workers forbid.
+- **Resolved (2026-09-27):** Postgres host is **Neon** over Fly Managed Postgres — lowest cost
+  at light usage (free/usage-based, scales to zero), with managed backups and point-in-time
+  restore. Trade-off accepted: cold-start latency on the first query after idle.
+- **Resolved (2026-09-27, B5):** ingest runs as a **deploy step against the live DB**, not baked
+  into the build: Fly's `release_command` runs `npm run release` (migrate, then ingest) in a
+  temporary machine from the new image before it takes traffic; a failure aborts the deploy.
+  The image therefore ships `src/`, `content/`, `drizzle/` and production `node_modules`
+  alongside `.output/`, and `tsx` + `dotenv` are runtime dependencies.
 - **Resolved (2026-06-13):** split routes (general + per-weapon pages, one MDX/`punish_guides`
   row each) over the prototype's single-page client-side weapon toggle — simpler authoring,
   better SEO/shareability. The general page may still surface weapon links at the top.

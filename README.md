@@ -85,6 +85,48 @@ pnpm hunts:export                      # volcar todas las cacerías como JSON a 
 pnpm hunts:export backups/hunts.json   # … o a un fichero
 ```
 
+## Despliegue
+
+Producción: **Fly.io** (servidor Nitro en Docker) · **Neon** (Postgres) · **Cloudflare R2**
+(clips). Ver `Dockerfile` y `fly.toml`.
+
+En cada `fly deploy`, antes de que la nueva versión reciba tráfico, Fly ejecuta
+`npm run release` (migraciones + `ingest` de `content/`, idempotente) en una máquina
+temporal. Si falla, el despliegue se aborta y sigue sirviendo la versión anterior.
+
+### Primera vez
+
+1. **Neon:** crear un proyecto en la región más cercana a la app de Fly y copiar la
+   cadena de conexión **directa** (no la *pooled*). Quitar `channel_binding=require`:
+   postgres.js lo envía al servidor como parámetro y la conexión falla. Dejar
+   `?sslmode=require`.
+2. **R2:** activar el acceso público del bucket (dominio `r2.dev` o dominio propio);
+   esa URL es `CDN_BASE_URL`.
+3. **Fly:**
+
+   ```bash
+   fly launch --no-deploy        # crea la app; ajustar `app` y `primary_region` en fly.toml
+   fly secrets set \
+     DATABASE_URL='postgresql://…neon.tech/neondb?sslmode=require' \
+     SESSION_SECRET="$(openssl rand -base64 32)" \
+     CUADERNO_OWNER_SECRET='…' \
+     CDN_BASE_URL='https://…'
+   fly deploy
+   ```
+
+Las credenciales de R2 no van a Fly: solo se usan en local para `pnpm clips:upload`.
+
+### Probar la imagen en local
+
+```bash
+docker build -t mhventanas .
+docker run --rm -e DATABASE_URL=… -e CDN_BASE_URL=… mhventanas npm run release
+docker run --rm -p 3000:3000 -e DATABASE_URL=… -e SESSION_SECRET=… \
+  -e CUADERNO_OWNER_SECRET=… mhventanas
+```
+
+Desde el contenedor, el Postgres de `pnpm db:up` está en `host.docker.internal:5433`.
+
 ## Specs
 
 La documentación del proyecto vive en [`docs/specs/`](docs/specs/):
